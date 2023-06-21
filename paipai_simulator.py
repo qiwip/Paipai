@@ -8,8 +8,8 @@ from selenium.webdriver.common.keys import Keys
 
 from selenium.webdriver.edge.options import Options
 
-# 今天的11点29分0秒时间
-time_11_29 = datetime.datetime.today().replace(hour=11, minute=29, second=0, microsecond=0)
+# 打开拍牌时间
+now = datetime.datetime.now().replace(second=0, microsecond=0)
 
 # 出价策略设置，修改下面的值 #
 '''
@@ -20,20 +20,20 @@ time_11_29 = datetime.datetime.today().replace(hour=11, minute=29, second=0, mic
 # 第一次出价的加价值
 first_add_price_num = 300
 # 第一次出价时间
-first_add_price_time = int(time.mktime((time_11_29+datetime.timedelta(seconds=30)).timetuple()))
+first_add_price_time = int(time.mktime((now+datetime.timedelta(seconds=30)).timetuple()))
 # 第二次出价的加价值
 second_add_price_num = 800
 # 第二次出价时间
-second_add_price_time = int(time.mktime((time_11_29+datetime.timedelta(seconds=45)).timetuple()))
+second_add_price_time = int(time.mktime((now+datetime.timedelta(seconds=45)).timetuple()))
 # 第二次确认时间，时间格式化只能到秒，所以用浮点数，可以在秒上在延迟0.x秒
-submit_time = time.mktime((time_11_29+datetime.timedelta(seconds=55)).timetuple()) + 0.5
+submit_time = time.mktime((now+datetime.timedelta(seconds=55)).timetuple()) + 0.5
 
 
 # 一些变量，不用修改
 # 用于记录ntp服务器时间和本地时间差值,启动时会进行一次计算,后续获取时间采用读本次时间+差值的方法作为NTP服务器时间
 time_gap = 0
 # 拍牌页面链接
-page_url = 'https://paimai2.alltobid.com/bid?type=individual'
+page_url = 'http://moni.51hupai.com/'
 
 
 def init_time():
@@ -71,6 +71,7 @@ class Pai(object):
             err_exit('未以debug模式打开Edge, 无法继续运行, 脚本退出')
         # 连接Edge
         self.driver = Edge(options=options)
+
         if self.driver.current_url != page_url:
             err_exit(f'当前页面为:{self.driver.current_url}, 请用Edge打开拍牌页面, 本次退出运行')
         print(f'\n浏览器连接成功, 页面正确:{self.driver.current_url}')
