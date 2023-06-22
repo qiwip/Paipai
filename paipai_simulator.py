@@ -8,8 +8,9 @@ from selenium.webdriver.common.keys import Keys
 
 from selenium.webdriver.edge.options import Options
 
-# 打开拍牌时间
-now = datetime.datetime.now().replace(second=0, microsecond=0)
+
+# 模拟拍牌这里获取当前的时间将秒重置为0，然后打开模拟拍牌页面，那个页面也是29分0秒。实际拍牌会设置为“今日”的11点29分0秒
+now = datetime.datetime.now()
 
 # 出价策略设置，修改下面的值 #
 '''
@@ -26,7 +27,7 @@ second_add_price_num = 800
 # 第二次出价时间
 second_add_price_time = int(time.mktime((now+datetime.timedelta(seconds=45)).timetuple()))
 # 第二次确认时间，时间格式化只能到秒，所以用浮点数，可以在秒上在延迟0.x秒
-submit_time = time.mktime((now+datetime.timedelta(seconds=55)).timetuple()) + 0.5
+submit_time = time.mktime((now+datetime.timedelta(seconds=57)).timetuple()) + 0.5
 
 
 # 一些变量，不用修改
@@ -71,7 +72,7 @@ class Pai(object):
             err_exit('未以debug模式打开Edge, 无法继续运行, 脚本退出')
         # 连接Edge
         self.driver = Edge(options=options)
-
+        self.driver.get(page_url)
         if self.driver.current_url != page_url:
             err_exit(f'当前页面为:{self.driver.current_url}, 请用Edge打开拍牌页面, 本次退出运行')
         print(f'\n浏览器连接成功, 页面正确:{self.driver.current_url}')
@@ -129,7 +130,7 @@ class Pai(object):
 
 if __name__ == '__main__':
     print(f'拍牌页面链接: {page_url}')
-    init_time()
+    # init_time()
     if get_time() > submit_time:
         err_exit('已过提交时间，请重设时间')
     pai = Pai()
